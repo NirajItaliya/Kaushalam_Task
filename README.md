@@ -26,7 +26,7 @@ This is a simple task management web application built with React.js for managin
 
 1. **Clone the repository**:
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/NirajItaliya/Kaushalam_Task.git
    cd task-management-app
 ## API Endpoints
 
