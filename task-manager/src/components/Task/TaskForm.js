@@ -1,90 +1,103 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { createTask, updateTask } from "../../api/api";
-import { toast } from "react-toastify";
-import "../../TaskForm.css";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../../TaskForm.css";  // Ensure you have the CSS imported
+
 const TaskForm = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [priority, setPriority] = useState("Medium");
     const [status, setStatus] = useState("Pending");
-    const [priority, setPriority] = useState("Low");
-    const [isEditing, setIsEditing] = useState(false);
+    const [loading, setLoading] = useState(false); // Loading state for button
+    const [errorMessage, setErrorMessage] = useState(""); // Error message state
     const navigate = useNavigate();
-    const { id } = useParams(); // To get the task ID from the URL when editing
-
-    useEffect(() => {
-        if (id) {
-            setIsEditing(true);
-            // You would fetch the task data from the API and set the state to pre-populate the form
-            // Assuming you have a getTask API endpoint
-            // Fetch task data based on `id` and update the state (e.g., setTitle, setDescription, etc.)
-        }
-    }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const taskData = { title, description, status, priority };
+
+        // Validation for required fields
+        if (!title || !description) {
+            setErrorMessage("Title and Description are required.");
+            return;
+        }
+
+        setLoading(true); // Set loading state to true when the request starts
+        setErrorMessage(""); // Reset any previous error message
 
         try {
-            if (isEditing) {
-                await updateTask(id, taskData);
-                toast.success("Task updated successfully!");
+            const response = await axios.post(
+                "https://kaushalam-task-backend.vercel.app/api/tasks",
+                { title, description, priority, status },
+                {
+                    headers: {
+                        "x-auth-token": localStorage.getItem("token"),
+                    },
+                }
+            );
+
+            // Check if the response is successful
+            if (response.data && response.data.success) {
+                console.log("Task added:", response.data);
+                setTitle("asas");
+                setDescription("saaas");
+                setPriority("Medium");
+                setStatus("Pending");
+                navigate("/task"); // Redirect to task list page
             } else {
-                await createTask(taskData);
-                toast.success("Task created successfully!");
+                setErrorMessage("Failed to add task. Please try again.");
             }
-            navigate("/tasks");
         } catch (error) {
-            toast.error("Error occurred while saving the task.");
+            console.error("Error adding task:", error);
+            setErrorMessage("An error occurred. Please check your connection or try again.");
+        } finally {
+            setLoading(false); // Set loading state to false when request is complete
         }
     };
 
     return (
-        <div>
-            <h2>{isEditing ? "Edit Task" : "Create Task"}</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Title:</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Description:</label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Status:</label>
-                    <select
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value)}
-                        required
-                    >
-                        <option value="Pending">Pending</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Priority:</label>
+        <div className="task-form-container">
+            <h2>Add New Task</h2>
+            <form onSubmit={handleSubmit} className="task-form">
+                <input
+                    type="text"
+                    placeholder="Task Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    className="task-input"
+                />
+                <textarea
+                    placeholder="Task Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                    className="task-input"
+                />
+                <div className="select-container">
                     <select
                         value={priority}
                         onChange={(e) => setPriority(e.target.value)}
-                        required
+                        className="task-select"
                     >
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
                         <option value="High">High</option>
                     </select>
+                    <select
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                        className="task-select"
+                    >
+                        <option value="Pending">Pending</option>
+                        <option value="Completed">Completed</option>
+                    </select>
                 </div>
-                <button type="submit">{isEditing ? "Update Task" : "Create Task"}</button>
+
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
+
+                <button type="submit" className="task-btn" disabled={loading}>
+                    {loading ? "Adding Task..." : "Add Task"}
+                </button>
             </form>
         </div>
     );

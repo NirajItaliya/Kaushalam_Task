@@ -32,8 +32,6 @@ const SignUp = () => {
             return false;
         }
 
-
-
         setError(""); // Clear error if all validations pass
         return true;
     };
@@ -52,7 +50,7 @@ const SignUp = () => {
             navigate("/login");
         } catch (error) {
             console.error("Registration failed:", error);
-            setError("Registration failed. Please try again.");
+            setError("Username already taken. Please choose a different username.");
         }
     };
 
@@ -84,6 +82,9 @@ const SignUp = () => {
                 <button type="submit">Sign Up</button>
                 {error && <p className="error-message">{error}</p>} {/* Display error message */}
             </form>
+            <p>
+                Already have an account? <a href="/login">Log In</a>
+            </p>
         </div>
     );
 };
