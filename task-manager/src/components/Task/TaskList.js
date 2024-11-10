@@ -23,7 +23,7 @@ const TaskList = () => {
     const handleDelete = async (taskId) => {
         try {
             await deleteTask(taskId);
-            setTasks(tasks.filter((task) => task._id !== taskId));
+            setTasks(tasks.filter((task) => task.id !== taskId));
             toast.success("Task deleted successfully!");
         } catch (error) {
             toast.error("Failed to delete task.");
@@ -32,6 +32,11 @@ const TaskList = () => {
 
     const handleEdit = (taskId) => {
         navigate(`/tasks/edit/${taskId}`);
+    };
+
+    // Helper function to display the status as text
+    const getStatusText = (status) => {
+        return status ? "Completed" : "Pending"; // Adjust the text based on the boolean value
     };
 
     return (
@@ -43,16 +48,16 @@ const TaskList = () => {
             <ul className="task-list">
                 {tasks.length > 0 ? (
                     tasks.map((task) => (
-                        <li key={task._id} className="task-item">
-                            <h3>{task.title}</h3>
-                            <p>{task.description}</p>
-                            <p>Status: {task.status}</p>
-                            <p>Priority: {task.priority}</p>
+                        <li key={task.id} className="task-item">
+                            <p>Title: {task.text}</p> {/* Displaying task title */}
+                            <p>Description: {task.description}</p>
+                            <p>Status: {getStatusText(task.status)}</p> {/* Displaying task status */}
+                            <p>Priority: {task.priority}</p> {/* Displaying task priority */}
                             <div className="task-actions">
-                                <button className="edit-btn" onClick={() => handleEdit(task._id)}>
+                                <button className="edit-btn" onClick={() => handleEdit(task.id)}>
                                     Edit
                                 </button>
-                                <button className="delete-btn" onClick={() => handleDelete(task._id)}>
+                                <button className="delete-btn" onClick={() => handleDelete(task.id)}>
                                     Delete
                                 </button>
                             </div>

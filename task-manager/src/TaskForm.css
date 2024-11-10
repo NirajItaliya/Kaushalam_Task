@@ -2,11 +2,11 @@
 .task-form-container {
     width: 100%;
     max-width: 500px;
-    margin: 0 auto;
+    margin: 50px auto;
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Title Styling */
@@ -14,6 +14,7 @@
     text-align: center;
     color: #333;
     margin-bottom: 20px;
+    font-size: 24px;
 }
 
 /* Form Styling */
@@ -24,11 +25,24 @@
 
 /* Input fields styling */
 .task-input {
-    padding: 10px;
+    padding: 12px;
     margin: 10px 0;
     font-size: 16px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s;
+}
+
+/* Input focus effect */
+.task-input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Textarea styling */
+textarea.task-input {
+    resize: vertical;
+    min-height: 100px;
 }
 
 /* Select box styling */
@@ -37,32 +51,65 @@
     justify-content: space-between;
 }
 
+/* Styling for select boxes */
 .task-select {
     width: 48%;
-    padding: 10px;
+    padding: 12px;
     margin: 10px 0;
     font-size: 16px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s;
 }
 
-/* Button styling */
+/* Select box focus effect */
+.task-select:focus {
+    border-color: #4CAF50;
+}
+
+/* Error message styling */
+.error-message {
+    color: #f44336;
+    margin: 10px 0;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Button Styling */
 .task-btn {
-    padding: 10px;
+    padding: 12px;
     font-size: 16px;
     background-color: #4CAF50;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-top: 20px;
 }
 
 .task-btn:hover {
     background-color: #45a049;
 }
 
-/* Placeholder Text */
-.task-input::placeholder {
-    color: #888;
+/* Disable button styling */
+.task-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Link to tasks list */
+.task-form p {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.task-form a {
+    color: #2196F3;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.task-form a:hover {
+    text-decoration: underline;
 }

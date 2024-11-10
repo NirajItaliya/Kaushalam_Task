@@ -54,3 +54,13 @@ export const deleteTask = async (taskId) => {
         console.error("Error deleting task:", error);
     }
 };
+
+
+export const getTaskById = async (taskId) => {
+    const response = await fetch(`/api/tasks/${taskId}`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch task');
+    }
+    return await response.json();
+};
+

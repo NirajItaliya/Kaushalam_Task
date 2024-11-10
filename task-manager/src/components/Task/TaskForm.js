@@ -4,7 +4,7 @@ import axios from "axios";
 import "../../TaskForm.css";  // Ensure you have the CSS imported
 
 const TaskForm = () => {
-    const [title, setTitle] = useState("");
+    const [text, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [priority, setPriority] = useState("Medium");
     const [status, setStatus] = useState("Pending");
@@ -16,7 +16,7 @@ const TaskForm = () => {
         e.preventDefault();
 
         // Validation for required fields
-        if (!title || !description) {
+        if (!text || !description) {
             setErrorMessage("Title and Description are required.");
             return;
         }
@@ -27,7 +27,7 @@ const TaskForm = () => {
         try {
             const response = await axios.post(
                 "https://kaushalam-task-backend.vercel.app/api/tasks",
-                { title, description, priority, status },
+                { text, description, priority, status },
                 {
                     headers: {
                         "x-auth-token": localStorage.getItem("token"),
@@ -36,13 +36,13 @@ const TaskForm = () => {
             );
 
             // Check if the response is successful
-            if (response.data && response.data.success) {
+            if (response.data) {
                 console.log("Task added:", response.data);
-                setTitle("asas");
-                setDescription("saaas");
+                setTitle("");
+                setDescription("");
                 setPriority("Medium");
                 setStatus("Pending");
-                navigate("/task"); // Redirect to task list page
+                navigate("/tasks"); // Redirect to task list page
             } else {
                 setErrorMessage("Failed to add task. Please try again.");
             }
@@ -61,7 +61,7 @@ const TaskForm = () => {
                 <input
                     type="text"
                     placeholder="Task Title"
-                    value={title}
+                    value={text}
                     onChange={(e) => setTitle(e.target.value)}
                     required
                     className="task-input"
@@ -98,6 +98,9 @@ const TaskForm = () => {
                 <button type="submit" className="task-btn" disabled={loading}>
                     {loading ? "Adding Task..." : "Add Task"}
                 </button>
+                <p>
+                    <a href="/tasks">Tasks List</a>
+                </p>
             </form>
         </div>
     );
