@@ -1,4 +1,3 @@
-// controllers/taskController.js
 const pool = require('../db');
 
 // Get all tasks for a user
@@ -14,11 +13,11 @@ exports.getTasks = async (req, res) => {
 
 // Create a new task
 exports.createTask = async (req, res) => {
-    const { text } = req.body;
+    const { text, description, priority } = req.body;
     try {
         const newTask = await pool.query(
-            'INSERT INTO tasks (text, user_id) VALUES ($1, $2) RETURNING *',
-            [text, req.user.userId]
+            'INSERT INTO tasks (text, description, priority, user_id) VALUES ($1, $2, $3, $4) RETURNING *',
+            [text, description, priority, req.user.userId]
         );
         res.status(201).json(newTask.rows[0]);
     } catch (err) {
@@ -29,12 +28,12 @@ exports.createTask = async (req, res) => {
 
 // Update an existing task
 exports.updateTask = async (req, res) => {
-    const { text } = req.body;
+    const { text, description, priority } = req.body;
     const { id } = req.params;
     try {
         const updatedTask = await pool.query(
-            'UPDATE tasks SET text = $1 WHERE id = $2 AND user_id = $3 RETURNING *',
-            [text, id, req.user.userId]
+            'UPDATE tasks SET text = $1, description = $2, priority = $3 WHERE id = $4 AND user_id = $5 RETURNING *',
+            [text, description, priority, id, req.user.userId]
         );
         res.json(updatedTask.rows[0]);
     } catch (err) {
